@@ -34,12 +34,18 @@ type UploadRequest = {
   tokenSymbol: string;
   mint: string;
   userWallet: string;
+  website?: string;
+  twitter?: string;
 };
 
 type Metadata = {
   name: string;
   symbol: string;
   image: string;
+  extensions?: {
+    website?: string;
+    twitter?: string;
+  };
 };
 
 type MetadataUploadParams = {
@@ -47,6 +53,8 @@ type MetadataUploadParams = {
   tokenSymbol: string;
   mint: string;
   image: string;
+  website?: string;
+  twitter?: string;
 };
 
 // R2 client setup
@@ -64,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { tokenLogo, tokenName, tokenSymbol, mint, userWallet } = req.body as UploadRequest;
+    const { tokenLogo, tokenName, tokenSymbol, mint, userWallet, website, twitter } = req.body as UploadRequest;
 
     // Validate required fields
     if (!tokenLogo || !tokenName || !tokenSymbol || !mint || !userWallet) {
@@ -77,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Failed to upload image' });
     }
 
-    const metadataUrl = await uploadMetadata({ tokenName, tokenSymbol, mint, image: imageUrl });
+    const metadataUrl = await uploadMetadata({ tokenName, tokenSymbol, mint, image: imageUrl, website, twitter });
     if (!metadataUrl) {
       return res.status(400).json({ error: 'Failed to upload metadata' });
     }
@@ -136,6 +144,14 @@ async function uploadMetadata(params: MetadataUploadParams): Promise<string | fa
     symbol: params.tokenSymbol,
     image: params.image,
   };
+
+  // Add extensions with social links if provided
+  if (params.website || params.twitter) {
+    metadata.extensions = {};
+    if (params.website) metadata.extensions.website = params.website;
+    if (params.twitter) metadata.extensions.twitter = params.twitter;
+  }
+
   const fileName = `metadata/${params.mint}.json`;
 
   try {
