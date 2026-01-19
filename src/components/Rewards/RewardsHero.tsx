@@ -1,9 +1,13 @@
-import Link from 'next/link';
-import { useWallet } from '@jup-ag/wallet-adapter';
+import { useWallet, useUnifiedWalletContext } from '@jup-ag/wallet-adapter';
 import { Button } from '../ui/button';
 
 export const RewardsHero = () => {
   const { publicKey } = useWallet();
+  const { setShowModal } = useUnifiedWalletContext();
+
+  const handleConnectWallet = () => {
+    setShowModal(true);
+  };
 
   return (
     <section className="relative overflow-hidden py-12 md:py-16">
@@ -29,11 +33,9 @@ export const RewardsHero = () => {
 
         {!publicKey && (
           <div className="mt-8">
-            <Button asChild size="lg" className="gap-2">
-              <Link href="#connect">
-                <span className="iconify ph--wallet-bold h-5 w-5" />
-                Connect Wallet to View Rewards
-              </Link>
+            <Button size="lg" className="gap-2" onClick={handleConnectWallet}>
+              <span className="iconify ph--wallet-bold h-5 w-5" />
+              Connect Wallet to View Rewards
             </Button>
           </div>
         )}

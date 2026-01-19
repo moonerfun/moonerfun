@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { useUnifiedWalletContext } from '@jup-ag/wallet-adapter';
 
 type EmptyStateProps = {
   isConnected: boolean;
 };
 
 export const EmptyState = ({ isConnected }: EmptyStateProps) => {
+  const { setShowModal } = useUnifiedWalletContext();
+
   if (!isConnected) {
     return (
       <div className="rounded-2xl border border-dashed border-neutral-700 bg-neutral-900/30 p-12 text-center">
@@ -18,6 +21,10 @@ export const EmptyState = ({ isConnected }: EmptyStateProps) => {
         <p className="mb-6 text-neutral-400">
           Connect your wallet to view pools you've created and claim your rewards.
         </p>
+        <Button onClick={() => setShowModal(true)} className="gap-2">
+          <span className="iconify ph--wallet-bold h-4 w-4" />
+          Connect Wallet
+        </Button>
       </div>
     );
   }
