@@ -11,6 +11,7 @@ import { TokenAge } from '../TokenAge';
 import { TokenSocials } from '../TokenSocials';
 import { TokenCardMcapMetric, TokenCardVolumeMetric } from './TokenCardMetric';
 import Link from 'next/link';
+import { getPoolLabel, getPoolLabelConfig, isPoolLabelsEnabled } from '@/lib/pool-labels';
 
 type TokenCardProps = {
   pool: Pool;
@@ -20,6 +21,8 @@ type TokenCardProps = {
 
 export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef }) => {
   const stats = pool.baseAsset[`stats${timeframe}`];
+  const poolLabel = isPoolLabelsEnabled() ? getPoolLabel(pool.createdAt) : null;
+  const labelConfig = getPoolLabelConfig(poolLabel);
 
   return (
     <div
@@ -43,6 +46,18 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
               >
                 {pool.baseAsset.symbol}
               </div>
+
+              {/* Pool Label Badge */}
+              {labelConfig && (
+                <span
+                  className={cn(
+                    'ml-1 rounded px-1.5 py-0.5 text-[10px] font-medium border',
+                    labelConfig.className
+                  )}
+                >
+                  {labelConfig.text}
+                </span>
+              )}
 
               <div className="ml-1 flex items-center gap-1 overflow-hidden z-10">
                 <Copyable
