@@ -1,5 +1,25 @@
 import '@/styles/globals.css';
 import { Adapter, UnifiedWalletProvider } from '@jup-ag/wallet-adapter';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  CoinbaseWalletAdapter,
+  TrustWalletAdapter,
+  LedgerWalletAdapter,
+  TorusWalletAdapter,
+  CloverWalletAdapter,
+  Coin98WalletAdapter,
+  MathWalletAdapter,
+  NightlyWalletAdapter,
+  SalmonWalletAdapter,
+  SkyWalletAdapter,
+  TokenPocketWalletAdapter,
+  AlphaWalletAdapter,
+  AvanaWalletAdapter,
+  BitpieWalletAdapter,
+  HuobiWalletAdapter,
+  SafePalWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import type { AppProps } from 'next/app';
 import { Toaster } from 'sonner';
 import { useMemo } from 'react';
@@ -14,8 +34,30 @@ if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
-  // Phantom, Solflare, etc. auto-register via wallet-standard, no need to add manually
-  const wallets: Adapter[] = useMemo((): Adapter[] => [], []);
+  // Include popular wallet adapters
+  const wallets: Adapter[] = useMemo(
+    (): Adapter[] => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new CoinbaseWalletAdapter(),
+      new TrustWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new Coin98WalletAdapter(),
+      new CloverWalletAdapter(),
+      new MathWalletAdapter(),
+      new NightlyWalletAdapter(),
+      new SalmonWalletAdapter(),
+      new SkyWalletAdapter(),
+      new TokenPocketWalletAdapter(),
+      new TorusWalletAdapter(),
+      new AlphaWalletAdapter(),
+      new AvanaWalletAdapter(),
+      new BitpieWalletAdapter(),
+      new HuobiWalletAdapter(),
+      new SafePalWalletAdapter(),
+    ],
+    []
+  );
 
   const queryClient = useMemo(() => new QueryClient(), []);
 
@@ -34,9 +76,11 @@ export default function App({ Component, pageProps }: AppProps) {
             url: 'https://mooner.fun',
             iconUrls: ['https://mooner.fun/favicon.ico'],
           },
-          // notificationCallback: WalletNotification,
-          theme: 'dark',
+          theme: 'jupiter',
           lang: 'en',
+          walletlistExplanation: {
+            href: 'https://station.jup.ag/docs/additional-topics/wallet-list',
+          },
         }}
       >
         <Toaster />

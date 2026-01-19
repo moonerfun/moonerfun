@@ -52,3 +52,140 @@ body {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+
+/* ===== Unified Wallet Kit Overrides ===== */
+
+/* Modal dialog wrapper - ensure proper centering */
+[role="dialog"],
+[data-radix-dialog-content] {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+}
+
+/* Modal backdrop */
+[data-radix-dialog-overlay],
+.unified-wallet-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Modal container - match app's dark theme */
+[class*="UnifiedWalletModal"],
+[class*="rounded-xl"][class*="max-w-md"] {
+  background: linear-gradient(180deg, #14151a 0%, #0a0b0f 100%) !important;
+  border: 1px solid rgba(252, 234, 43, 0.15) !important;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 25px 50px -12px rgba(0, 0, 0, 0.8),
+    0 0 60px -15px rgba(252, 234, 43, 0.1) !important;
+  border-radius: 16px !important;
+}
+
+/* Modal header */
+[class*="UnifiedWalletModal"] [class*="py-6"],
+[class*="rounded-xl"][class*="max-w-md"] > div:first-child {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Wallet list items */
+[class*="UnifiedWalletModal"] button[class*="rounded-lg"],
+[class*="rounded-xl"][class*="max-w-md"] ul button {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+[class*="UnifiedWalletModal"] button[class*="rounded-lg"]:hover,
+[class*="rounded-xl"][class*="max-w-md"] ul button:hover {
+  background: rgba(252, 234, 43, 0.08) !important;
+  border-color: rgba(252, 234, 43, 0.3) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Wallet icons */
+[class*="UnifiedWalletModal"] img,
+[class*="rounded-xl"][class*="max-w-md"] ul img {
+  border-radius: 8px !important;
+}
+
+/* Text styling */
+[class*="UnifiedWalletModal"] span[class*="font-semibold"],
+[class*="rounded-xl"][class*="max-w-md"] span[class*="font-semibold"] {
+  color: #e8e8ed !important;
+}
+
+[class*="UnifiedWalletModal"] [class*="text-white/50"],
+[class*="rounded-xl"][class*="max-w-md"] [class*="text-white/50"] {
+  color: rgba(232, 232, 237, 0.5) !important;
+}
+
+/* "More wallets" button */
+[class*="UnifiedWalletModal"] button[class*="cursor-pointer"]:not(ul button),
+[class*="rounded-xl"][class*="max-w-md"] > div button[class*="justify-between"] {
+  color: var(--primary) !important;
+  opacity: 0.8;
+}
+
+[class*="UnifiedWalletModal"] button[class*="cursor-pointer"]:not(ul button):hover {
+  opacity: 1;
+}
+
+/* Links styling */
+[class*="UnifiedWalletModal"] a[class*="underline"],
+[class*="rounded-xl"][class*="max-w-md"] a[class*="underline"] {
+  color: var(--primary) !important;
+  opacity: 0.7;
+}
+
+[class*="UnifiedWalletModal"] a[class*="underline"]:hover {
+  opacity: 1;
+}
+
+/* Close button */
+[class*="UnifiedWalletModal"] button[class*="absolute"][class*="top-4"],
+[class*="rounded-xl"][class*="max-w-md"] button[class*="absolute"] {
+  color: rgba(255, 255, 255, 0.5) !important;
+  transition: color 0.2s ease !important;
+}
+
+[class*="UnifiedWalletModal"] button[class*="absolute"][class*="top-4"]:hover {
+  color: #fff !important;
+}
+
+/* Onboarding/Get Wallet buttons */
+[class*="UnifiedWalletModal"] button[class*="bg-[#31333B]"],
+[class*="rounded-xl"][class*="max-w-md"] button[class*="bg-[#31333B]"] {
+  background: linear-gradient(135deg, #fcea2b 0%, #f0d800 100%) !important;
+  color: #0a0b0f !important;
+  font-weight: 600 !important;
+  border: none !important;
+}
+
+[class*="UnifiedWalletModal"] button[class*="bg-[#31333B]"]:hover {
+  background: linear-gradient(135deg, #fff066 0%, #fcea2b 100%) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Hide scrollbar in modal but keep functionality */
+[class*="UnifiedWalletModal"] .hideScrollbar,
+[class*="rounded-xl"][class*="max-w-md"] [class*="overflow-y-auto"] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(252, 234, 43, 0.3) transparent;
+}
+
+[class*="UnifiedWalletModal"] .hideScrollbar::-webkit-scrollbar,
+[class*="rounded-xl"][class*="max-w-md"] [class*="overflow-y-auto"]::-webkit-scrollbar {
+  width: 4px;
+}
+
+[class*="UnifiedWalletModal"] .hideScrollbar::-webkit-scrollbar-thumb,
+[class*="rounded-xl"][class*="max-w-md"] [class*="overflow-y-auto"]::-webkit-scrollbar-thumb {
+  background: rgba(252, 234, 43, 0.3);
+  border-radius: 2px;
+}
