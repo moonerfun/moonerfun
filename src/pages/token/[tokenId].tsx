@@ -9,7 +9,7 @@ import { DataStreamProvider, useDataStream } from '@/contexts/DataStreamProvider
 import { TokenChartProvider } from '@/contexts/TokenChartProvider';
 import { useTokenAddress, useTokenInfo } from '@/hooks/queries';
 import dynamic from 'next/dynamic';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useWallet } from '@jup-ag/wallet-adapter';
 
 const DirectSwap = dynamic(() => import('@/components/DirectSwap'), { ssr: false });
@@ -28,13 +28,19 @@ const DirectSwapWidget = () => {
 
 const JupiterTerminalWidget = () => {
   const tokenId = useTokenAddress();
-  const { publicKey, signTransaction, signAllTransactions, connect, disconnect, connected, wallet } = useWallet();
+  const walletContext = useWallet();
   const [isInitialized, setIsInitialized] = useState(false);
+  const isInitializingRef = useRef(false);
 
   const initJupiter = useCallback(() => {
     if (typeof window === 'undefined' || !(window as any).Jupiter) {
       return;
     }
+
+    if (isInitializingRef.current) {
+      return;
+    }
+    isInitializingRef.current = true;
 
     // Clean up previous instance
     const container = document.getElementById('jupiter-terminal');
@@ -42,34 +48,24 @@ const JupiterTerminalWidget = () => {
       container.innerHTML = '';
     }
 
+    // Jupiter Plugin v1 is RPC-less - no need to pass endpoint
     (window as any).Jupiter.init({
       displayMode: 'integrated',
       integratedTargetId: 'jupiter-terminal',
-      // Jupiter requires direct RPC access - use a separate public/rate-limited key
-      endpoint: process.env.NEXT_PUBLIC_JUPITER_RPC_URL || 'https://api.mainnet-beta.solana.com',
       formProps: {
         initialInputMint: 'So11111111111111111111111111111111111111112',
         initialOutputMint: tokenId || undefined,
         fixedOutputMint: !!tokenId,
       },
       enableWalletPassthrough: true,
-      passthroughWalletContextState: publicKey ? {
-        publicKey,
-        signTransaction,
-        signAllTransactions,
-        connect,
-        disconnect,
-        connected,
-        wallet,
-      } : undefined,
     });
     setIsInitialized(true);
-  }, [tokenId, publicKey, signTransaction, signAllTransactions, connect, disconnect, connected, wallet]);
+  }, [tokenId]);
 
   useEffect(() => {
     // Wait for Jupiter to load
     const checkJupiter = setInterval(() => {
-      if ((window as any).Jupiter) {
+      if ((window as any).Jupiter?.init) {
         clearInterval(checkJupiter);
         initJupiter();
       }
@@ -78,22 +74,14 @@ const JupiterTerminalWidget = () => {
     return () => clearInterval(checkJupiter);
   }, [initJupiter]);
 
-  // Sync wallet state with Jupiter
+  // Sync wallet state with Jupiter Plugin
   useEffect(() => {
     if (isInitialized && (window as any).Jupiter?.syncProps) {
       (window as any).Jupiter.syncProps({
-        passthroughWalletContextState: publicKey ? {
-          publicKey,
-          signTransaction,
-          signAllTransactions,
-          connect,
-          disconnect,
-          connected,
-          wallet,
-        } : undefined,
+        passthroughWalletContextState: walletContext,
       });
     }
-  }, [isInitialized, publicKey, signTransaction, signAllTransactions, connect, disconnect, connected, wallet]);
+  }, [isInitialized, walletContext]);
 
   return (
     <div 
