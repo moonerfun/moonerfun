@@ -3,14 +3,20 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { CreatePoolButton } from './CreatePoolButton';
 import { useMemo, useState } from 'react';
-import { shortenAddress } from '@/lib/utils';
+import { shortenAddress, cn } from '@/lib/utils';
 import CopyIconSVG from '@/icons/CopyIconSVG';
 
 const NATIVE_TOKEN_ADDRESS = 'H6Mt2u7ZRGwQb4KBHw3jbT2NazpVYLCFWjTRM2S6UX3n';
 
+const navLinks = [
+  { label: 'Explore', href: '/explore' },
+  { label: 'About', href: '/about' },
+];
+
 export const Header = () => {
   const { setShowModal } = useUnifiedWalletContext();
   const [copied, setCopied] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { disconnect, publicKey } = useWallet();
   const address = useMemo(() => publicKey?.toBase58(), [publicKey]);
@@ -42,8 +48,30 @@ export const Header = () => {
           </span>
         </Link>
 
+        {/* Navigation Links - Desktop */}
+        <nav className="hidden md:flex items-center gap-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-neutral-400 transition-colors hover:text-primary"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
         {/* Navigation and Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-400 hover:text-primary hover:border-neutral-700 transition-colors"
+            aria-label="Toggle menu"
+          >
+            <span className={cn('iconify h-5 w-5', mobileMenuOpen ? 'ph--x-bold' : 'ph--list-bold')} />
+          </button>
+          
           <CreatePoolButton />
           {address ? (
             <Button onClick={() => disconnect()}>{shortenAddress(address)}</Button>
@@ -59,6 +87,27 @@ export const Header = () => {
           )}
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      <div
+        className={cn(
+          'md:hidden overflow-hidden transition-all duration-300 border-b border-neutral-800 bg-neutral-950',
+          mobileMenuOpen ? 'max-h-48' : 'max-h-0 border-b-0'
+        )}
+      >
+        <nav className="flex flex-col px-4 py-3 gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-neutral-300 hover:text-primary hover:bg-neutral-900 transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
 
       {/* Native Token Bar */}
       <div className="w-full bg-primary/10 border-y border-primary/20 overflow-hidden">

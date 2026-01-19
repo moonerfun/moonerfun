@@ -1,15 +1,18 @@
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 
 interface IProps {
   containerClassName?: string;
   pageClassName?: string;
+  showFooter?: boolean;
 }
 
 const Page: React.FC<React.PropsWithChildren<IProps>> = ({
   containerClassName,
   children,
   pageClassName,
+  showFooter = true,
 }) => {
   return (
     <div
@@ -27,6 +30,7 @@ const Page: React.FC<React.PropsWithChildren<IProps>> = ({
       >
         <div className="w-full">{children}</div>
       </div>
+      {showFooter && <Footer />}
     </div>
   );
 };
