@@ -9,14 +9,11 @@ type CreatePoolButtonProps = {
 export const CreatePoolButton = ({ className }: CreatePoolButtonProps) => {
   return (
     <Button>
-      {/* <Link href="/create-pool" className="flex items-center gap-1">
+       <Link href="/create-pool" className="flex items-center gap-1">
         <span className="iconify ph--rocket-bold w-4 h-4" />
         <span>Create Pool</span>
-      </Link> */}
-           <Link href="/" className="flex items-center gap-1">
-        <span className="iconify ph--rocket-bold w-4 h-4" />
-        <span>Temporary disabled</span>
-      </Link>
+      </Link> 
+     
     </Button>
   );
 };
