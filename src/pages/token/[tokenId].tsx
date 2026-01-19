@@ -96,15 +96,15 @@ const SwapWidget = () => {
   const [activeTab, setActiveTab] = useState<SwapTab>('jupiter');
 
   return (
-    <div className="rounded-xl border border-moon-800 bg-moon-900/50 overflow-hidden">
+    <div className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden">
       {/* Tab Header */}
-      <div className="flex border-b border-moon-700">
+      <div className="flex border-b border-neutral-800">
         <button
           onClick={() => setActiveTab('jupiter')}
           className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === 'jupiter'
-              ? 'bg-moon-800/50 text-white border-b-2 border-cosmic-500'
-              : 'text-moon-400 hover:text-white hover:bg-moon-800/30'
+              ? 'bg-neutral-800 text-white border-b-2 border-primary'
+              : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
           }`}
         >
           <span className="flex items-center justify-center gap-2">
@@ -116,8 +116,8 @@ const SwapWidget = () => {
           onClick={() => setActiveTab('direct')}
           className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === 'direct'
-              ? 'bg-moon-800/50 text-white border-b-2 border-cosmic-500'
-              : 'text-moon-400 hover:text-white hover:bg-moon-800/30'
+              ? 'bg-neutral-800 text-white border-b-2 border-primary'
+              : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
           }`}
         >
           <span className="flex items-center justify-center gap-2">
@@ -173,7 +173,7 @@ export const TokenPageWithContext = () => {
 
       <div className="flex flex-col gap-4 pb-8">
         {/* Token Header Card */}
-        <div className="rounded-xl border border-moon-800 bg-moon-900/50 p-4">
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-4">
           <TokenHeader className="max-sm:order-1" />
         </div>
 
@@ -192,14 +192,14 @@ export const TokenPageWithContext = () => {
             <TokenStats key={`token-stats-${poolId}`} />
 
             {/* Chart */}
-            <div className="h-[400px] lg:h-[500px] rounded-xl border border-moon-800 bg-moon-900/30 overflow-hidden">
+            <div className="h-[400px] lg:h-[500px] rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden">
               <TokenChartProvider>
                 <TokenChart />
               </TokenChartProvider>
             </div>
 
             {/* Transactions/Holders Panel */}
-            <div className="h-[500px] rounded-xl border border-moon-800 bg-moon-900/30 overflow-hidden">
+            <div className="h-[500px] rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden">
               <TokenBottomPanel className="flex flex-col h-full" />
             </div>
           </div>

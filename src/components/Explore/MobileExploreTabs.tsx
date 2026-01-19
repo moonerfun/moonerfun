@@ -14,8 +14,8 @@ export const ExploreTabTitleMap: Record<ExploreTab, string> = {
 export const MobileExploreTabs = () => {
   const { mobileTab, setMobileTab, pausedTabs } = useExplore();
   return (
-    <div className="sticky inset-x-0 top-0 z-20 border-b border-neutral-850 shadow-md shadow-neutral-950 lg:hidden bg-black">
-      <div className="px-2 py-1">
+    <div className="sticky inset-x-0 top-0 z-20 border-b border-neutral-800 lg:hidden bg-neutral-950">
+      <div className="px-3 py-2">
         <ToggleGroupPrimitive.Root
           className="flex h-9 w-full min-w-fit items-center gap-1 text-sm"
           type="single"
@@ -56,11 +56,11 @@ const ToggleGroupItem = React.forwardRef<
     <ToggleGroupPrimitive.Item
       ref={ref}
       className={cn(
-        'flex h-full w-full items-center justify-center gap-1 whitespace-nowrap rounded-lg px-3 text-neutral-400 transition-all',
-        'data-[state=off]:hover:text-primary/80',
-        'data-[state=on]:bg-primary/10 data-[state=on]:text-primary',
+        'flex h-full w-full items-center justify-center gap-1 whitespace-nowrap rounded-lg px-4 py-2 text-neutral-400 transition-all font-medium',
+        'data-[state=off]:hover:text-primary',
+        'data-[state=on]:bg-primary/15 data-[state=on]:text-primary data-[state=on]:border data-[state=on]:border-primary/30',
         'disabled:pointer-events-none disabled:opacity-50',
-        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         className
       )}
       {...props}

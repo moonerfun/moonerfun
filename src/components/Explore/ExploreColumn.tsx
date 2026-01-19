@@ -41,8 +41,7 @@ export const ExploreColumn: React.FC<ExploreColumnProps> = ({ tab }) => {
       </div>
 
       {/* List */}
-      <div className="relative flex-1 border-neutral-850 text-xs lg:border-t h-full">
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-2 bg-gradient-to-b from-neutral-950 to-transparent" />
+      <div className="relative flex-1 border-neutral-800 text-sm lg:border-t h-full">
         <TokenCardListContainer
           tab={tab}
           request={request}

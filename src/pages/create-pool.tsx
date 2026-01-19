@@ -146,7 +146,7 @@ export default function CreatePool() {
         />
       </Head>
 
-      <div className="min-h-screen bg-moon-950 text-white">
+      <div className="min-h-screen bg-neutral-950 text-white">
         {/* Header */}
         <Header />
 
@@ -155,7 +155,7 @@ export default function CreatePool() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
             <div>
               <h1 className="text-4xl font-bold mb-2">Create Pool</h1>
-              <p className="text-moon-300">Launch your token with flywheel-powered bonding curve</p>
+              <p className="text-neutral-300">Launch your token with flywheel-powered bonding curve</p>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export default function CreatePool() {
               className="space-y-8"
             >
               {/* Token Details Section */}
-              <div className="bg-moon-800/50 rounded-xl p-8 backdrop-blur-sm border border-moon-700">
+              <div className="bg-neutral-900 rounded-xl p-8 border border-neutral-800">
                 <h2 className="text-2xl font-bold mb-4">Token Details</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -178,7 +178,7 @@ export default function CreatePool() {
                     <div className="mb-4">
                       <label
                         htmlFor="tokenName"
-                        className="block text-sm font-medium text-moon-300 mb-1"
+                        className="block text-sm font-medium text-neutral-300 mb-1"
                       >
                         Token Name*
                       </label>
@@ -189,7 +189,7 @@ export default function CreatePool() {
                             id="tokenName"
                             name={field.name}
                             type="text"
-                            className="w-full p-3 bg-moon-900 border border-moon-700 rounded-lg text-white"
+                            className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
                             placeholder="e.g. Virtual Coin"
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
@@ -203,7 +203,7 @@ export default function CreatePool() {
                     <div className="mb-4">
                       <label
                         htmlFor="tokenSymbol"
-                        className="block text-sm font-medium text-moon-300 mb-1"
+                        className="block text-sm font-medium text-neutral-300 mb-1"
                       >
                         Token Symbol*
                       </label>
@@ -214,7 +214,7 @@ export default function CreatePool() {
                             id="tokenSymbol"
                             name={field.name}
                             type="text"
-                            className="w-full p-3 bg-moon-900 border border-moon-700 rounded-lg text-white"
+                            className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
                             placeholder="e.g. VRTL"
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
@@ -229,16 +229,16 @@ export default function CreatePool() {
                   <div>
                     <label
                       htmlFor="tokenLogo"
-                      className="block text-sm font-medium text-moon-300 mb-1"
+                      className="block text-sm font-medium text-neutral-300 mb-1"
                     >
                       Token Logo*
                     </label>
                     {form.Field({
                       name: 'tokenLogo',
                       children: (field) => (
-                        <div className="border-2 border-dashed border-moon-600 rounded-lg p-8 text-center">
-                          <span className="iconify w-6 h-6 mx-auto mb-2 text-moon-400 ph--upload-bold" />
-                          <p className="text-moon-400 text-xs mb-2">PNG, JPG or SVG (max. 2MB)</p>
+                        <div className="border-2 border-dashed border-neutral-600 rounded-lg p-8 text-center">
+                          <span className="iconify w-6 h-6 mx-auto mb-2 text-neutral-400 ph--upload-bold" />
+                          <p className="text-neutral-400 text-xs mb-2">PNG, JPG or SVG (max. 2MB)</p>
                           <input
                             type="file"
                             id="tokenLogo"
@@ -252,7 +252,7 @@ export default function CreatePool() {
                           />
                           <label
                             htmlFor="tokenLogo"
-                            className="bg-moon-700 px-4 py-2 rounded-lg text-sm hover:bg-moon-600 transition cursor-pointer"
+                            className="bg-neutral-700 px-4 py-2 rounded-lg text-sm hover:bg-neutral-600 transition cursor-pointer"
                           >
                             Browse Files
                           </label>
@@ -264,14 +264,14 @@ export default function CreatePool() {
               </div>
 
               {/* Social Links Section */}
-              <div className="bg-moon-800/50 rounded-xl p-8 backdrop-blur-sm border border-moon-700">
+              <div className="bg-neutral-900 rounded-xl p-8 border border-neutral-800">
                 <h2 className="text-2xl font-bold mb-6">Social Links (Optional)</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="mb-4">
                     <label
                       htmlFor="website"
-                      className="block text-sm font-medium text-moon-300 mb-1"
+                      className="block text-sm font-medium text-neutral-300 mb-1"
                     >
                       Website
                     </label>
@@ -282,7 +282,7 @@ export default function CreatePool() {
                           id="website"
                           name={field.name}
                           type="url"
-                          className="w-full p-3 bg-moon-900 border border-moon-700 rounded-lg text-white"
+                          className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
                           placeholder="https://yourwebsite.com"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
@@ -294,7 +294,7 @@ export default function CreatePool() {
                   <div className="mb-4">
                     <label
                       htmlFor="twitter"
-                      className="block text-sm font-medium text-moon-300 mb-1"
+                      className="block text-sm font-medium text-neutral-300 mb-1"
                     >
                       Twitter
                     </label>
@@ -305,7 +305,7 @@ export default function CreatePool() {
                           id="twitter"
                           name={field.name}
                           type="url"
-                          className="w-full p-3 bg-moon-900 border border-moon-700 rounded-lg text-white"
+                          className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
                           placeholder="https://twitter.com/yourusername"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
@@ -377,7 +377,7 @@ const SubmitButton = ({ isSubmitting }: { isSubmitting: boolean }) => {
 const PoolCreationSuccess = () => {
   return (
     <>
-      <div className="bg-white/5 rounded-xl p-8 backdrop-blur-sm border border-white/10 text-center">
+      <div className="bg-neutral-900 rounded-xl p-8 border border-neutral-800 text-center">
         <div className="bg-green-500/20 p-4 rounded-full inline-flex mb-6">
           <span className="iconify ph--check-bold w-12 h-12 text-green-500" />
         </div>
@@ -389,7 +389,7 @@ const PoolCreationSuccess = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="bg-white/10 px-6 py-3 rounded-xl font-medium hover:bg-white/20 transition"
+            className="bg-neutral-800 px-6 py-3 rounded-xl font-medium hover:bg-neutral-700 transition"
           >
             Explore Pools
           </Link>
@@ -397,7 +397,7 @@ const PoolCreationSuccess = () => {
             onClick={() => {
               window.location.reload();
             }}
-            className="cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-xl font-medium hover:opacity-90 transition"
+            className="cursor-pointer bg-primary hover:bg-primary-600 text-neutral-950 px-6 py-3 rounded-xl font-medium transition"
           >
             Create Another Pool
           </button>

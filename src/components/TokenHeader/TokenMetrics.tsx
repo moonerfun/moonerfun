@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { MetricFdv, MetricHolders, MetricLiquidity, MetricMcap } from './TokenMetric/TokenMetric';
+import { MetricBurned, MetricFdv, MetricHolders, MetricLiquidity, MetricMcap } from './TokenMetric/TokenMetric';
 import { cn } from '@/lib/utils';
 
 type TokenMetricsProps = {
@@ -13,6 +13,7 @@ export const TokenMetrics: React.FC<TokenMetricsProps> = memo(({ className }) =>
       <MetricFdv className="text-sm px-4 py-3" />
       <MetricLiquidity className="text-sm px-4 py-3" />
       <MetricHolders className="text-sm px-4 py-3" />
+      <MetricBurned className="text-sm px-4 py-3" />
     </div>
   );
 });

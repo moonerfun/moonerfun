@@ -9,7 +9,7 @@ import { Copyable } from '../ui/Copyable';
 import CopyIconSVG from '@/icons/CopyIconSVG';
 import { TokenAge } from '../TokenAge';
 import { TokenSocials } from '../TokenSocials';
-import { TokenCardMcapMetric, TokenCardVolumeMetric } from './TokenCardMetric';
+import { TokenCardBurnedMetric, TokenCardMcapMetric, TokenCardVolumeMetric } from './TokenCardMetric';
 import Link from 'next/link';
 import { getPoolLabel, getPoolLabelConfig, isPoolLabelsEnabled } from '@/lib/pool-labels';
 
@@ -28,10 +28,10 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
     <div
       ref={(el) => rowRef(el, pool.id)}
       data-pool-id={pool.id}
-      className="relative flex cursor-pointer items-center border-neutral-850 py-3 pl-1.5 pr-2 text-xs has-hover:hover:bg-neutral-900 [&:nth-child(n+2)]:border-t"
+      className="relative flex cursor-pointer items-center border-neutral-800 py-5 px-4 text-sm has-hover:hover:bg-neutral-900/50 [&:nth-child(n+2)]:border-t transition-colors"
     >
-      <div className="shrink-0 pl-2 pr-4">
-        <TrenchesPoolTokenIcon width={54} height={54} pool={pool} />
+      <div className="shrink-0 pr-5">
+        <TrenchesPoolTokenIcon width={72} height={72} pool={pool} />
       </div>
 
       {/* Info */}
@@ -41,7 +41,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
           <div className="overflow-hidden">
             <div className="flex items-center gap-0.5 xl:gap-1">
               <div
-                className="whitespace-nowrap text-sm font-semibold"
+                className="whitespace-nowrap text-base font-bold text-neutral-100"
                 title={pool.baseAsset.symbol}
               >
                 {pool.baseAsset.symbol}
@@ -98,6 +98,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
 
           {/* Token metric */}
           <div className="flex items-center gap-2.5">
+            <TokenCardBurnedMetric totalSupply={pool.baseAsset.totalSupply} />
             <TokenCardVolumeMetric buyVolume={stats?.buyVolume} sellVolume={stats?.sellVolume} />
             <TokenCardMcapMetric mcap={pool.baseAsset.mcap} />
           </div>
@@ -115,11 +116,11 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
 type TokenCardSkeletonProps = React.ComponentPropsWithoutRef<'div'>;
 
 export const TokenCardSkeleton: React.FC<TokenCardSkeletonProps> = ({ className, ...props }) => (
-  <div className={cn('border-b border-neutral-925 py-3 pl-1.5 pr-2 text-xs', className)} {...props}>
+  <div className={cn('border-b border-neutral-800 py-5 px-4 text-sm', className)} {...props}>
     <div className="flex items-center">
       {/* Icon */}
-      <div className="shrink-0 pl-2 pr-4">
-        <Skeleton className="h-14 w-14 rounded-full" />
+      <div className="shrink-0 pr-5">
+        <Skeleton className="h-[72px] w-[72px] rounded-full" />
       </div>
 
       {/* Info */}

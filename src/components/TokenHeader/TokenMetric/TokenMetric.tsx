@@ -89,3 +89,34 @@ export const MetricHolders: React.FC<{ className?: string }> = ({ className }) =
     />
   );
 };
+
+// Burned percentage (tokens launch with 1B supply)
+const INITIAL_SUPPLY = 1_000_000_000;
+
+export const MetricBurned: React.FC<{ className?: string }> = ({ className }) => {
+  const { data: baseAsset } = useTokenInfo((data) => data?.baseAsset);
+
+  const totalSupply = baseAsset?.totalSupply;
+  const burnedPercentage =
+    totalSupply !== undefined && totalSupply > 0
+      ? Math.max(0, ((INITIAL_SUPPLY - totalSupply) / INITIAL_SUPPLY) * 100)
+      : undefined;
+
+  const hasBurned = burnedPercentage !== undefined && burnedPercentage > 0;
+
+  return (
+    <TokenMetric
+      className={cn('flex py-3 items-center justify-between', className)}
+      label={
+        <span className="flex items-center gap-1">
+          <span>🔥</span>
+          <span>Burned</span>
+        </span>
+      }
+    >
+      <span className={cn('font-medium tabular-nums', hasBurned ? 'text-orange-400' : 'text-neutral-300')}>
+        {burnedPercentage !== undefined ? `${burnedPercentage.toFixed(2)}%` : '-'}
+      </span>
+    </TokenMetric>
+  );
+};

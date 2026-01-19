@@ -206,3 +206,28 @@ export const TokenCardLiquidityMetric: React.FC<TokenCardLiquidityMetricProps> =
     </Metric>
   );
 };
+
+// Burned percentage (tokens launch with 1B supply)
+const INITIAL_SUPPLY = 1_000_000_000;
+
+type TokenCardBurnedMetricProps = {
+  totalSupply: number | undefined;
+};
+
+export const TokenCardBurnedMetric: React.FC<TokenCardBurnedMetricProps> = ({ totalSupply }) => {
+  const burnedPercentage = useMemo(() => {
+    if (totalSupply === undefined || totalSupply <= 0) return undefined;
+    const burned = ((INITIAL_SUPPLY - totalSupply) / INITIAL_SUPPLY) * 100;
+    return Math.max(0, burned); // Ensure non-negative
+  }, [totalSupply]);
+
+  const hasBurned = burnedPercentage !== undefined && burnedPercentage > 0;
+
+  return (
+    <Metric label="🔥" tooltip="% Burned" className="text-sm">
+      <span className={cn('font-medium', hasBurned ? 'text-orange-400' : 'text-neutral-500')}>
+        {burnedPercentage !== undefined ? `${burnedPercentage.toFixed(1)}%` : '-'}
+      </span>
+    </Metric>
+  );
+};

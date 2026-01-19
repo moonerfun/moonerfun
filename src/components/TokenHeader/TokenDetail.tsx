@@ -13,9 +13,9 @@ export const TokenDetails: React.FC = () => {
       <TokenMetrics key={`token-metrics-${tokenId}`} />
       
       {/* Bonding Curve - separate card since it may be null */}
-      <BondingCurve key={`bonding-curve-${tokenId}`} className="rounded-xl border border-neutral-800 bg-neutral-900/50 px-4 py-3" />
+      <BondingCurve key={`bonding-curve-${tokenId}`} className="rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3" />
       
-      <div className="rounded-xl border border-neutral-800 bg-neutral-900/50 overflow-hidden divide-y divide-neutral-800">
+      <div className="rounded-xl border border-neutral-800 bg-neutral-900 overflow-hidden divide-y divide-neutral-800">
         <TokenDescription />
         <Checklist />
       </div>
