@@ -3,6 +3,7 @@ import Link from 'next/link';
 const footerLinks = {
   product: [
     { label: 'Explore', href: '/explore' },
+    { label: 'Rewards', href: '/rewards' },
     { label: 'Create Pool', href: '/create-pool' },
     { label: 'About', href: '/about' },
   ],

@@ -10,6 +10,7 @@ const NATIVE_TOKEN_ADDRESS = 'H6Mt2u7ZRGwQb4KBHw3jbT2NazpVYLCFWjTRM2S6UX3n';
 
 const navLinks = [
   { label: 'Explore', href: '/explore' },
+  { label: 'Rewards', href: '/rewards' },
   { label: 'About', href: '/about' },
 ];
 
