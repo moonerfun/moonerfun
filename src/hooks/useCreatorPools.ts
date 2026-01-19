@@ -8,10 +8,9 @@ type CreatorPoolsResponse = {
   migrated_pools: number;
 };
 
-const FLYWHEEL_API_URL = process.env.NEXT_PUBLIC_FLYWHEEL_API_URL || 'http://localhost:3001';
-
 async function fetchCreatorPools(walletAddress: string): Promise<CreatorPoolsResponse> {
-  const response = await fetch(`${FLYWHEEL_API_URL}/pools/creator/${walletAddress}`);
+  // Use local Next.js API route instead of external flywheel API
+  const response = await fetch(`/api/pools/creator/${walletAddress}`);
   
   if (!response.ok) {
     throw new Error('Failed to fetch creator pools');
