@@ -12,6 +12,8 @@ const footerLinks = {
   ],
   social: [
     { label: 'Twitter', href: 'https://twitter.com/moonerfun', external: true },
+    { label: 'Telegram', href: 'https://t.me/moonerfun_portal', external: true },
+
   ],
 };
 
