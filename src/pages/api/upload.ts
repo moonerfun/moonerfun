@@ -34,17 +34,23 @@ type UploadRequest = {
   tokenSymbol: string;
   mint: string;
   userWallet: string;
+  description?: string;
   website?: string;
   twitter?: string;
+  telegram?: string;
+  discord?: string;
 };
 
 type Metadata = {
   name: string;
   symbol: string;
+  description?: string;
   image: string;
   extensions?: {
     website?: string;
     twitter?: string;
+    telegram?: string;
+    discord?: string;
   };
 };
 
@@ -53,8 +59,11 @@ type MetadataUploadParams = {
   tokenSymbol: string;
   mint: string;
   image: string;
+  description?: string;
   website?: string;
   twitter?: string;
+  telegram?: string;
+  discord?: string;
 };
 
 // R2 client setup
@@ -72,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { tokenLogo, tokenName, tokenSymbol, mint, userWallet, website, twitter } = req.body as UploadRequest;
+    const { tokenLogo, tokenName, tokenSymbol, mint, userWallet, description, website, twitter, telegram, discord } = req.body as UploadRequest;
 
     // Validate required fields
     if (!tokenLogo || !tokenName || !tokenSymbol || !mint || !userWallet) {
@@ -85,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Failed to upload image' });
     }
 
-    const metadataUrl = await uploadMetadata({ tokenName, tokenSymbol, mint, image: imageUrl, website, twitter });
+    const metadataUrl = await uploadMetadata({ tokenName, tokenSymbol, mint, image: imageUrl, description, website, twitter, telegram, discord });
     if (!metadataUrl) {
       return res.status(400).json({ error: 'Failed to upload metadata' });
     }
@@ -145,11 +154,18 @@ async function uploadMetadata(params: MetadataUploadParams): Promise<string | fa
     image: params.image,
   };
 
+  // Add description if provided
+  if (params.description) {
+    metadata.description = params.description;
+  }
+
   // Add extensions with social links if provided
-  if (params.website || params.twitter) {
+  if (params.website || params.twitter || params.telegram || params.discord) {
     metadata.extensions = {};
     if (params.website) metadata.extensions.website = params.website;
     if (params.twitter) metadata.extensions.twitter = params.twitter;
+    if (params.telegram) metadata.extensions.telegram = params.telegram;
+    if (params.discord) metadata.extensions.discord = params.discord;
   }
 
   const fileName = `metadata/${params.mint}.json`;

@@ -15,16 +15,22 @@ const poolSchema = z.object({
   tokenName: z.string().min(3, 'Token name must be at least 3 characters'),
   tokenSymbol: z.string().min(1, 'Token symbol is required'),
   tokenLogo: z.instanceof(File, { message: 'Token logo is required' }).optional(),
+  description: z.string().max(500, 'Description must be less than 500 characters').optional().or(z.literal('')),
   website: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
   twitter: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
+  telegram: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
+  discord: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
 });
 
 interface FormValues {
   tokenName: string;
   tokenSymbol: string;
   tokenLogo: File | undefined;
+  description?: string;
   website?: string;
   twitter?: string;
+  telegram?: string;
+  discord?: string;
 }
 
 export default function CreatePool() {
@@ -33,14 +39,18 @@ export default function CreatePool() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [poolCreated, setPoolCreated] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
       tokenName: '',
       tokenSymbol: '',
       tokenLogo: undefined,
+      description: '',
       website: '',
       twitter: '',
+      telegram: '',
+      discord: '',
     } as FormValues,
     onSubmit: async ({ value }) => {
       try {
@@ -78,8 +88,11 @@ export default function CreatePool() {
             tokenName: value.tokenName,
             tokenSymbol: value.tokenSymbol,
             userWallet: address,
+            description: value.description || undefined,
             website: value.website || undefined,
             twitter: value.twitter || undefined,
+            telegram: value.telegram || undefined,
+            discord: value.discord || undefined,
           }),
         });
 
@@ -237,16 +250,42 @@ export default function CreatePool() {
                       name: 'tokenLogo',
                       children: (field) => (
                         <div className="border-2 border-dashed border-neutral-600 rounded-lg p-8 text-center">
-                          <span className="iconify w-6 h-6 mx-auto mb-2 text-neutral-400 ph--upload-bold" />
-                          <p className="text-neutral-400 text-xs mb-2">PNG, JPG or SVG (max. 2MB)</p>
+                          {logoPreview ? (
+                            <div className="relative inline-block">
+                              <img
+                                src={logoPreview}
+                                alt="Token logo preview"
+                                className="w-24 h-24 rounded-lg object-cover mx-auto mb-2"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setLogoPreview(null);
+                                  field.handleChange(undefined);
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 rounded-full p-1 transition"
+                              >
+                                <span className="iconify w-4 h-4 ph--x-bold" />
+                              </button>
+                            </div>
+                          ) : (
+                            <>
+                              <span className="iconify w-6 h-6 mx-auto mb-2 text-neutral-400 ph--upload-bold" />
+                              <p className="text-neutral-400 text-xs mb-2">PNG, JPG or SVG (max. 2MB)</p>
+                            </>
+                          )}
                           <input
                             type="file"
                             id="tokenLogo"
+                            accept="image/png,image/jpeg,image/svg+xml"
                             className="hidden"
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (file) {
                                 field.handleChange(file);
+                                // Create preview URL
+                                const previewUrl = URL.createObjectURL(file);
+                                setLogoPreview(previewUrl);
                               }
                             }}
                           />
@@ -254,12 +293,42 @@ export default function CreatePool() {
                             htmlFor="tokenLogo"
                             className="bg-neutral-700 px-4 py-2 rounded-lg text-sm hover:bg-neutral-600 transition cursor-pointer"
                           >
-                            Browse Files
+                            {logoPreview ? 'Change Image' : 'Browse Files'}
                           </label>
                         </div>
                       ),
                     })}
                   </div>
+                </div>
+
+                {/* Description Field */}
+                <div className="mt-6">
+                  <label
+                    htmlFor="description"
+                    className="block text-sm font-medium text-neutral-300 mb-1"
+                  >
+                    Description
+                  </label>
+                  {form.Field({
+                    name: 'description',
+                    children: (field) => (
+                      <div>
+                        <textarea
+                          id="description"
+                          name={field.name}
+                          className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white resize-none"
+                          placeholder="Describe your token project, its purpose, and vision..."
+                          rows={4}
+                          maxLength={500}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
+                        <p className="text-neutral-500 text-xs mt-1 text-right">
+                          {field.state.value?.length || 0}/500 characters
+                        </p>
+                      </div>
+                    ),
+                  })}
                 </div>
               </div>
 
@@ -307,6 +376,52 @@ export default function CreatePool() {
                           type="url"
                           className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
                           placeholder="https://twitter.com/yourusername"
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
+                      ),
+                    })}
+                  </div>
+
+                  <div className="mb-4">
+                    <label
+                      htmlFor="telegram"
+                      className="block text-sm font-medium text-neutral-300 mb-1"
+                    >
+                      Telegram
+                    </label>
+                    {form.Field({
+                      name: 'telegram',
+                      children: (field) => (
+                        <input
+                          id="telegram"
+                          name={field.name}
+                          type="url"
+                          className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
+                          placeholder="https://t.me/yourgroup"
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                        />
+                      ),
+                    })}
+                  </div>
+
+                  <div className="mb-4">
+                    <label
+                      htmlFor="discord"
+                      className="block text-sm font-medium text-neutral-300 mb-1"
+                    >
+                      Discord
+                    </label>
+                    {form.Field({
+                      name: 'discord',
+                      children: (field) => (
+                        <input
+                          id="discord"
+                          name={field.name}
+                          type="url"
+                          className="w-full p-3 bg-neutral-800 border border-neutral-700 rounded-lg text-white"
+                          placeholder="https://discord.gg/yourinvite"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
                         />
