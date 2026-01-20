@@ -25,6 +25,7 @@ import { Toaster } from 'sonner';
 import { useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useWindowWidthListener } from '@/lib/device';
+import { useCurrentDateTicker } from '@/lib/environment/date';
 
 // Polyfill for wallet-standard to prevent "wallets is not an array" warning
 if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
@@ -62,6 +63,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const queryClient = useMemo(() => new QueryClient(), []);
 
   useWindowWidthListener();
+  useCurrentDateTicker();
 
   return (
     <QueryClientProvider client={queryClient}>
