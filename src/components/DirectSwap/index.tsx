@@ -19,6 +19,7 @@ import { Skeleton } from '../ui/Skeleton';
 import { useTokenInfo } from '@/hooks/queries';
 
 // Custom fetch that proxies RPC requests through our API to hide the API key
+// All RPC calls go to /api/rpc which forwards to the server's RPC_URL (mainnet)
 const proxyFetch: typeof fetch = async (input, init) => {
   // Only proxy JSON-RPC requests (POST with JSON body)
   if (typeof window !== 'undefined' && init?.method === 'POST') {
@@ -28,8 +29,9 @@ const proxyFetch: typeof fetch = async (input, init) => {
   return fetch(input, init);
 };
 
-// Use public RPC URL for Connection (the actual API key is hidden via proxy fetch)
-const RPC_ENDPOINT = 'https://api.devnet.solana.com';
+// This URL is just a placeholder - actual requests go through the proxy to the configured RPC_URL
+// The proxy at /api/rpc forwards all requests to process.env.RPC_URL (mainnet)
+const RPC_ENDPOINT = 'https://api.mainnet-beta.solana.com';
 
 // Create a shared connection instance with custom fetch to proxy requests
 const sharedConnection = new Connection(RPC_ENDPOINT, {
@@ -594,7 +596,7 @@ export function DirectSwap({ mint }: DirectSwapProps) {
         <div className="flex flex-col gap-1">
           <span>Swap successful!</span>
           <a 
-            href={`https://solscan.io/tx/${txSignature}?cluster=devnet`} 
+            href={`https://solscan.io/tx/${txSignature}`} 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-xs text-blue-400 hover:underline"

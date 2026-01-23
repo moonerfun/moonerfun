@@ -11,6 +11,7 @@ import { DynamicBondingCurveClient } from '@meteora-ag/dynamic-bonding-curve-sdk
 import BN from 'bn.js';
 
 // Custom fetch that proxies RPC requests through our API to hide the API key
+// All RPC calls go to /api/rpc which forwards to the server's RPC_URL (mainnet)
 const proxyFetch: typeof fetch = async (input, init) => {
   if (typeof window !== 'undefined' && init?.method === 'POST') {
     return fetch('/api/rpc', init);
@@ -18,8 +19,9 @@ const proxyFetch: typeof fetch = async (input, init) => {
   return fetch(input, init);
 };
 
-// Use public RPC URL (actual requests go through proxy)
-const RPC_ENDPOINT = 'https://api.devnet.solana.com';
+// This URL is just a placeholder - actual requests go through the proxy to the configured RPC_URL
+// The proxy at /api/rpc forwards all requests to process.env.RPC_URL (mainnet)
+const RPC_ENDPOINT = 'https://api.mainnet-beta.solana.com';
 
 // Create connection with proxy fetch
 const createProxiedConnection = () => new Connection(RPC_ENDPOINT, {
