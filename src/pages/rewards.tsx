@@ -42,7 +42,9 @@ export default function RewardsPage() {
   );
 
   // Fetch Meteora + Jupiter data for all migrated pools
-  const { data: meteoraPoolsData, isLoading: isLoadingMeteora } = useMeteoraPoolsData(poolsWithMints);
+  const { data: meteoraPoolsData, isFetching: isFetchingMeteora, isLoading: isLoadingMeteoraRaw } = useMeteoraPoolsData(poolsWithMints);
+  // Only show Meteora as loading if we actually have pools to fetch
+  const isLoadingMeteora = poolsWithMints.length > 0 && (isFetchingMeteora || isLoadingMeteoraRaw);
 
   // Merge Meteora/Jupiter data with our pools
   const poolsWithMeteoraData = useMemo(() => {

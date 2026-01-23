@@ -136,6 +136,9 @@ export function useCreatorFeeBalances(baseMints: string[]) {
     refetchInterval: 60_000, // Refresh every minute
   });
 
+  // Only show loading if we're actually fetching (not if query is disabled)
+  const isActuallyLoading = query.isFetching || (query.isLoading && !!publicKey && baseMints.length > 0);
+
   // Calculate totals
   const totals = useMemo(() => {
     if (!query.data) {
@@ -158,7 +161,7 @@ export function useCreatorFeeBalances(baseMints: string[]) {
   return {
     feeBalances: query.data ?? {},
     totals,
-    isLoading: query.isLoading,
+    isLoading: isActuallyLoading,
     isError: query.isError,
     refetch: query.refetch,
   };
