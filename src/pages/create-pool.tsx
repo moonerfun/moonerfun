@@ -101,7 +101,7 @@ export default function CreatePool() {
           throw new Error(error.error);
         }
 
-        const { poolTx } = await uploadResponse.json();
+        const { poolTx, poolInfo } = await uploadResponse.json();
         const transaction = Transaction.from(Buffer.from(poolTx, 'base64'));
 
         // Step 2: Sign with keypair first
@@ -110,7 +110,7 @@ export default function CreatePool() {
         // Step 3: Then sign with user's wallet
         const signedTransaction = await signTransaction(transaction);
 
-        // Step 4: Send signed transaction
+        // Step 4: Send signed transaction with pool info for flywheel registration
         const sendResponse = await fetch('/api/send-transaction', {
           method: 'POST',
           headers: {
@@ -118,6 +118,7 @@ export default function CreatePool() {
           },
           body: JSON.stringify({
             signedTransaction: signedTransaction.serialize().toString('base64'),
+            poolInfo, // Pass pool info for flywheel registration
           }),
         });
 

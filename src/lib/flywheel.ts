@@ -6,7 +6,7 @@
  * buyback, and burn operations.
  */
 
-const FLYWHEEL_API_URL = process.env.FLYWHEEL_API_URL || 'http://localhost:3001';
+const FLYWHEEL_API_URL = process.env.FLYWHEEL_API_URL || 'https://mooner.fun';
 
 export interface PoolCreatedPayload {
   poolAddress: string;

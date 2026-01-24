@@ -116,6 +116,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           verifySignatures: false,
         })
         .toString('base64'),
+      // Return pool info for flywheel registration (pool address will be looked up after tx)
+      poolInfo: {
+        baseMint: mint,
+        creator: userWallet,
+        name: tokenName,
+        symbol: tokenSymbol,
+      },
     });
   } catch (error) {
     console.error('Upload error:', error);
