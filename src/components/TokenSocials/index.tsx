@@ -21,15 +21,21 @@ export const TokenSocials: React.FC<TokenSocialsProps> = memo(({ token, classNam
     e.stopPropagation();
   }, []);
 
+  const handleMouseEvent = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <span
       className={cn(
         'flex items-center gap-[5px] [--icon-color:theme(colors.neutral.400)]',
         className
       )}
+      onMouseEnter={handleMouseEvent}
+      onMouseLeave={handleMouseEvent}
       {...props}
     >
-      <HoverPopover content={`Search CA on X`} sideOffset={4}>
+      <HoverPopover content={`Search CA on X`} sideOffset={4} delayDuration={200}>
         <ExternalLink
           className="group/icon"
           onClick={handleClick}

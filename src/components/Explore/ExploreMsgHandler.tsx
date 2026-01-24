@@ -66,7 +66,8 @@ export const ExploreMsgHandler: React.FC = () => {
                 }
               } else if (
                 update.pool.bondingCurve !== undefined &&
-                update.pool.bondingCurve > minBondingCurve
+                update.pool.bondingCurve !== null &&
+                update.pool.bondingCurve >= minBondingCurve
               ) {
                 Object.assign(update.pool, { streamed: true });
                 aboutToGraduatePools.push(update.pool);
@@ -146,7 +147,8 @@ export const ExploreMsgHandler: React.FC = () => {
                   aboutToGraduatePools[aboutToGraduatePools.length - 1]?.bondingCurve ?? 0;
                 if (
                   update.pool.bondingCurve !== undefined &&
-                  update.pool.bondingCurve > minBondingCurve
+                  update.pool.bondingCurve !== null &&
+                  update.pool.bondingCurve >= minBondingCurve
                 ) {
                   Object.assign(update.pool, { streamed: true });
                   aboutToGraduatePools.push(update.pool);

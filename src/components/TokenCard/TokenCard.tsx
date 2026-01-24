@@ -28,7 +28,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
     <div
       ref={(el) => rowRef(el, pool.id)}
       data-pool-id={pool.id}
-      className="relative flex cursor-pointer items-center border-neutral-800 py-5 px-4 text-sm has-hover:hover:bg-neutral-900/50 [&:nth-child(n+2)]:border-t transition-colors"
+      className="relative flex cursor-pointer items-center py-5 px-4 text-sm has-hover:hover:bg-neutral-900/50 transition-colors border-b border-neutral-800 last:border-b-0"
     >
       <div className="shrink-0 pr-5">
         <TrenchesPoolTokenIcon width={72} height={72} pool={pool} />
@@ -59,7 +59,11 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
                 </span>
               )}
 
-              <div className="ml-1 flex items-center gap-1 overflow-hidden z-10">
+              <div 
+                className="ml-1 flex items-center gap-1 overflow-hidden z-10"
+                onMouseEnter={(e) => e.stopPropagation()}
+                onMouseLeave={(e) => e.stopPropagation()}
+              >
                 <Copyable
                   name="Address"
                   copyText={pool.baseAsset.id}
@@ -97,7 +101,11 @@ export const TokenCard: React.FC<TokenCardProps> = ({ pool, timeframe, rowRef })
           </div>
 
           {/* Token metric */}
-          <div className="flex items-center gap-2.5">
+          <div 
+            className="flex items-center gap-2.5"
+            onMouseEnter={(e) => e.stopPropagation()}
+            onMouseLeave={(e) => e.stopPropagation()}
+          >
             <TokenCardBurnedMetric totalSupply={pool.baseAsset.totalSupply} />
             <TokenCardVolumeMetric buyVolume={stats?.buyVolume} sellVolume={stats?.sellVolume} />
             <TokenCardMcapMetric mcap={pool.baseAsset.mcap} />

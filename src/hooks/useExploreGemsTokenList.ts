@@ -12,6 +12,9 @@ export function useExploreGemsTokenList<T = QueryData<typeof ApeQueries.gemsToke
     ...ApeQueries.gemsTokenList(request),
     select,
     refetchInterval: 30 * 1000,
-    // TODO: set time, we dont want to keep inactive tabs in cache at all
+    // Ensure data is considered stale so it refetches properly
+    staleTime: 10 * 1000,
+    // Refetch when window regains focus to catch any missed updates
+    refetchOnWindowFocus: true,
   });
 }

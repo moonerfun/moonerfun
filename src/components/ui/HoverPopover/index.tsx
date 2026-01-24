@@ -17,13 +17,24 @@ const HoverPopoverTrigger = forwardRef<
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
 >(({ className, ...props }, ref) => {
   const { handleMouseEnter, handleMouseLeave, open } = useHoverPopover();
+  
+  const onMouseEnter = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleMouseEnter();
+  };
+  
+  const onMouseLeave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleMouseLeave();
+  };
+  
   return (
     <PopoverPrimitive.Trigger
       ref={ref}
       className={cn('outline-none', className, { 'z-50': open })}
       {...props}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={handleMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onMouseEnter={onMouseEnter}
     />
   );
 });
@@ -86,6 +97,18 @@ const HoverPopoverContent = forwardRef<
   ) => {
     const { handleMouseEnter, handleMouseLeave, open } = useHoverPopover();
 
+    const onContentMouseEnter = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (retainOnContentHover) {
+        handleMouseEnter();
+      }
+    };
+
+    const onContentMouseLeave = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      handleMouseLeave();
+    };
+
     const content = (
       <>
         {backdrop && open && (
@@ -101,11 +124,11 @@ const HoverPopoverContent = forwardRef<
           ref={ref}
           {...props}
           className={cn(
-            'z-50 w-full max-w-[360px] rounded-lg bg-black p-2 text-xs text-white outline-none',
+            'z-[100] w-full max-w-[360px] rounded-lg bg-neutral-900 border border-neutral-700 p-2 text-xs text-white outline-none shadow-lg',
             className
           )}
-          onMouseEnter={retainOnContentHover ? handleMouseEnter : undefined}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={onContentMouseEnter}
+          onMouseLeave={onContentMouseLeave}
         >
           {children}
         </PopoverPrimitive.Content>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { HoverPopover } from '../ui/HoverPopover';
 import { Pool } from '../Explore/types';
 import { cn } from '@/lib/utils';
@@ -14,14 +14,24 @@ type MetricProps = {
   className?: string;
 };
 
-export const Metric: React.FC<MetricProps> = ({ label, children, tooltip, className }) => (
-  <HoverPopover content={tooltip} asChild>
-    <button className={cn('z-[1] flex items-center gap-0.5 text-neutral-500', className)}>
-      {label}
-      {children}
-    </button>
-  </HoverPopover>
-);
+export const Metric: React.FC<MetricProps> = ({ label, children, tooltip, className }) => {
+  const handleMouseEvent = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  return (
+    <HoverPopover content={tooltip} asChild delayDuration={200}>
+      <button 
+        className={cn('z-[1] flex items-center gap-0.5 text-neutral-500', className)}
+        onMouseEnter={handleMouseEvent}
+        onMouseLeave={handleMouseEvent}
+      >
+        {label}
+        {children}
+      </button>
+    </HoverPopover>
+  );
+};
 
 type TokenCardTopHoldersMetricProps = {
   audit: Pool['baseAsset']['audit'];

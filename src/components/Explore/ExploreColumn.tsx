@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { categorySortBy, categorySortDir, createPoolSorter } from '@/components/Explore/pool-utils';
 import { ApeQueries, GemsTokenListQueryArgs, QueryData } from '@/components/Explore/queries';
 import { ExploreTab, TokenListSortByField, normalizeSortByField } from '@/components/Explore/types';
@@ -11,6 +11,8 @@ import { EXPLORE_FIXED_TIMEFRAME, useExplore } from '@/contexts/ExploreProvider'
 import { Pool } from '@/contexts/types';
 import { isHoverableDevice, useBreakpoint } from '@/lib/device';
 import { PausedIndicator } from './PausedIndicator';
+
+const MOUSE_LEAVE_DELAY = 100; // ms delay before unpausing
 
 type ExploreColumnProps = {
   tab: ExploreTab;
@@ -69,29 +71,69 @@ const TokenCardListContainer: React.FC<TokenCardListContainerProps> = memo(
     const isMobile = breakpoint === 'md' || breakpoint === 'sm' || breakpoint === 'xs';
 
     const listRef = useRef<HTMLDivElement>(null);
+    const mouseLeaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const isMouseInsideRef = useRef(false);
 
     const { data: currentData, status } = useExploreGemsTokenList((data) => data[tab]);
 
-    const [snapshotData, setSnapshotData] = useState<Pool[]>();
+    // Use ref to store snapshot to avoid re-renders
+    const snapshotDataRef = useRef<Pool[] | undefined>(undefined);
+    const [snapshotVersion, setSnapshotVersion] = useState(0);
+
+    // Store current pools in a ref to avoid dependency issues
+    const currentPoolsRef = useRef<Pool[] | undefined>(undefined);
+    currentPoolsRef.current = currentData?.pools;
 
     const handleMouseEnter = useCallback(() => {
       if (!isHoverableDevice() || status !== 'success') {
         return;
       }
 
+      // Clear any pending mouse leave timer
+      if (mouseLeaveTimerRef.current) {
+        clearTimeout(mouseLeaveTimerRef.current);
+        mouseLeaveTimerRef.current = null;
+      }
+
+      isMouseInsideRef.current = true;
+
       // When clicking elements (copyable) it triggers mouse enter again
       // We don't want to re-snapshot data if already paused
       if (!isPaused) {
-        setSnapshotData(currentData?.pools);
+        snapshotDataRef.current = currentPoolsRef.current;
+        setSnapshotVersion((v) => v + 1);
+        setIsPaused(true);
       }
-      setIsPaused(true);
-    }, [currentData?.pools, isPaused, setIsPaused, status]);
+    }, [isPaused, setIsPaused, status]);
 
     const handleMouseLeave = useCallback(() => {
       if (!isHoverableDevice()) return;
 
-      setIsPaused(false);
+      isMouseInsideRef.current = false;
+
+      // Clear any existing timer
+      if (mouseLeaveTimerRef.current) {
+        clearTimeout(mouseLeaveTimerRef.current);
+      }
+
+      // Delay unpausing to prevent flickering when moving between elements
+      mouseLeaveTimerRef.current = setTimeout(() => {
+        // Only unpause if mouse is still outside
+        if (!isMouseInsideRef.current) {
+          setIsPaused(false);
+        }
+        mouseLeaveTimerRef.current = null;
+      }, MOUSE_LEAVE_DELAY);
     }, [setIsPaused]);
+
+    // Cleanup timer on unmount
+    useEffect(() => {
+      return () => {
+        if (mouseLeaveTimerRef.current) {
+          clearTimeout(mouseLeaveTimerRef.current);
+        }
+      };
+    }, []);
 
     // Mutate the args so stream sorts by timeframe
     useEffect(() => {
@@ -147,13 +189,14 @@ const TokenCardListContainer: React.FC<TokenCardListContainerProps> = memo(
       if (top <= 0) {
         // Only snapshot on initial pause
         if (!isPaused) {
-          setSnapshotData(currentData?.pools);
+          snapshotDataRef.current = currentPoolsRef.current;
+          setSnapshotVersion((v) => v + 1);
         }
         setIsPaused(true);
       } else {
         setIsPaused(false);
       }
-    }, [currentData?.pools, isPaused, setIsPaused, isMobile]);
+    }, [isPaused, setIsPaused, isMobile]);
 
     // Handle scroll pausing on mobile
     useEffect(() => {
@@ -169,18 +212,34 @@ const TokenCardListContainer: React.FC<TokenCardListContainerProps> = memo(
       };
     }, [isMobile, setIsPaused, handleScroll]);
 
-    // Map snapshot data to current data for most recent updated data
-    const displayData = isPaused
-      ? snapshotData?.map((snapshotPool) => {
-          const current = currentData?.pools.find(
-            (p) => p.baseAsset.id === snapshotPool.baseAsset.id
-          );
-          if (current) {
-            return current;
-          }
-          return snapshotPool;
-        })
-      : currentData?.pools;
+    // Memoize displayData to prevent unnecessary re-renders
+    const displayData = useMemo(() => {
+      if (!isPaused) {
+        return currentData?.pools;
+      }
+      
+      const snapshotData = snapshotDataRef.current;
+      if (!snapshotData) {
+        return currentData?.pools;
+      }
+      
+      // Get updated data for snapshot tokens
+      const updatedSnapshot = snapshotData.map((snapshotPool) => {
+        const current = currentData?.pools?.find(
+          (p) => p.baseAsset.id === snapshotPool.baseAsset.id
+        );
+        return current ?? snapshotPool;
+      });
+      
+      // Find new tokens that arrived during pause (not in snapshot)
+      const snapshotIds = new Set(snapshotData.map((p) => p.baseAsset.id));
+      const newTokens = currentData?.pools?.filter(
+        (p) => !snapshotIds.has(p.baseAsset.id)
+      ) ?? [];
+      
+      // Prepend new tokens to the list so they're visible
+      return [...newTokens, ...updatedSnapshot];
+    }, [isPaused, currentData?.pools, snapshotVersion]);
 
     return (
       <TokenCardList
