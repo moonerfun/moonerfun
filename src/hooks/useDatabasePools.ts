@@ -17,6 +17,8 @@ export type DatabasePool = {
   total_fees_collected_sol: number;
   current_marketcap_usd: number | null;
   current_price_usd: number | null;
+  total_supply: number | null;
+  circulating_supply: number | null;
   volume_24h: number | null;
   liquidity: number | null;
   holder_count: number | null;

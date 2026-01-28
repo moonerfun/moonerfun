@@ -31,6 +31,8 @@ export function databasePoolToExplorePool(dbPool: DatabasePool): Pool {
       usdPrice: dbPool.current_price_usd || undefined,
       liquidity: dbPool.liquidity || undefined,
       holderCount: dbPool.holder_count || undefined,
+      totalSupply: dbPool.total_supply || undefined,
+      circSupply: dbPool.circulating_supply || undefined,
       twitter: dbPool.twitter || undefined,
       telegram: dbPool.telegram || undefined,
       website: dbPool.website || undefined,
