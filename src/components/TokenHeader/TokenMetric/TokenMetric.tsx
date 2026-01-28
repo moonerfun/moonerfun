@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ReadableNumber } from '@/components/ui/ReadableNumber';
-import { useTokenInfo } from '@/hooks/queries';
+import { useTokenInfo, useTokenAddress } from '@/hooks/queries';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 type TokenMetricProps = {
@@ -93,12 +94,37 @@ export const MetricHolders: React.FC<{ className?: string }> = ({ className }) =
 // Burned percentage (tokens launch with 1B supply)
 const INITIAL_SUPPLY = 1_000_000_000;
 
+// Hook to fetch supply from database as fallback
+function useSupplyFallback(mint: string | undefined, jupiterSupply: number | undefined) {
+  return useQuery({
+    queryKey: ['supply-fallback', mint],
+    queryFn: async () => {
+      if (!mint) return null;
+      const res = await fetch(`/api/pools/${mint}/supply`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.found ? data.totalSupply : null;
+    },
+    // Only fetch from database if Jupiter doesn't have supply data
+    enabled: !!mint && (jupiterSupply === undefined || jupiterSupply === 0),
+    staleTime: 60 * 1000, // Cache for 1 minute
+  });
+}
+
 export const MetricBurned: React.FC<{ className?: string }> = ({ className }) => {
+  const tokenAddress = useTokenAddress();
   const { data: baseAsset } = useTokenInfo((data) => data?.baseAsset);
 
-  const totalSupply = baseAsset?.totalSupply;
+  const jupiterSupply = baseAsset?.totalSupply;
+  
+  // Fallback to database if Jupiter doesn't have supply data
+  const { data: dbSupply } = useSupplyFallback(tokenAddress, jupiterSupply);
+  
+  // Use Jupiter supply if available, otherwise use database supply
+  const totalSupply = jupiterSupply ?? dbSupply;
+  
   const burnedPercentage =
-    totalSupply !== undefined && totalSupply > 0
+    totalSupply !== undefined && totalSupply !== null && totalSupply > 0
       ? Math.max(0, ((INITIAL_SUPPLY - totalSupply) / INITIAL_SUPPLY) * 100)
       : undefined;
 

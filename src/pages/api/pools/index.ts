@@ -20,6 +20,8 @@ type PoolFromDB = {
   total_fees_collected_sol: number;
   current_marketcap_usd: number | null;
   current_price_usd: number | null;
+  total_supply: number | null;
+  circulating_supply: number | null;
   volume_24h: number | null;
   liquidity: number | null;
   holder_count: number | null;
@@ -115,6 +117,8 @@ export default async function handler(
       total_fees_collected_sol: Number(p.total_fees_collected_sol || 0),
       current_marketcap_usd: p.current_marketcap_usd ? Number(p.current_marketcap_usd) : null,
       current_price_usd: p.current_price_usd ? Number(p.current_price_usd) : null,
+      total_supply: p.total_supply ? Number(p.total_supply) : null,
+      circulating_supply: p.circulating_supply ? Number(p.circulating_supply) : null,
       volume_24h: p.volume_24h ? Number(p.volume_24h) : null,
       liquidity: p.liquidity ? Number(p.liquidity) : null,
       holder_count: p.holder_count ? Number(p.holder_count) : null,
